@@ -104,6 +104,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>D:\ThirdParty\OpenCV-2.4.13\opencv\build\include;..\3rdparty\yolo_v2\include</AdditionalIncludeDirectories>
+      <UndefinePreprocessorDefinitions>CUDNN</UndefinePreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -112,11 +113,11 @@
       <AdditionalDependencies>yolo_cpp_dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_core2413.dll" "$(targetDir)opencv_core2413.dll"
-copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_highgui2413.dll" "$(targetDir)opencv_highgui2413.dll"
-copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_ffmpeg2413_64.dll" "$(targetDir)opencv_ffmpeg2413_64.dll"
-copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_imgproc2413.dll" "$(targetDir)opencv_imgproc2413.dll"
-copy /Y "$(SolutionDir)3rdparty\yolo_v2\bin\yolo_cpp_dll.dll" "$(targetDir)yolo_cpp_dll.dll"
+      <Command>copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_core2413.dll" "$(targetDir)opencv_cored2413.dll"
+copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_highgui2413.dll" "$(targetDir)opencv_highguid2413.dll"
+copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_ffmpeg2413_64.dll" "$(targetDir)opencv_ffmpegd2413_64.dll"
+copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_imgproc2413.dll" "$(targetDir)opencv_imgprocd2413.dll"
+copy /Y "$(SolutionDir)3rdparty\yolo_v2\bin\yolo_cpp_dll.dll" "$(targetDir)yolo_cpp_dlld.dll"
 
 copy /Y "$(SolutionDir)config\yolo.cfg" "$(targetDir)yolo.cfg"
 copy /Y "$(SolutionDir)config\data\coco.data" "$(targetDir)coco.data"
@@ -153,13 +154,28 @@ copy /Y "$(SolutionDir)config\weights\yolo.weights" "$(targetDir)yolo.weights"
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\ThirdParty\OpenCV-2.4.13\opencv\build\include;..\3rdparty\yolo_v2\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>yolo_cpp_dll.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\lib;..\3rdparty\yolo_v2\lib</AdditionalLibraryDirectories>
     </Link>
+    <PreBuildEvent>
+      <Command>copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_core2413.dll" "$(targetDir)opencv_core2413.dll"
+copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_highgui2413.dll" "$(targetDir)opencv_highgui2413.dll"
+copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_ffmpeg2413_64.dll" "$(targetDir)opencv_ffmpeg2413_64.dll"
+copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_imgproc2413.dll" "$(targetDir)opencv_imgproc2413.dll"
+copy /Y "$(SolutionDir)3rdparty\yolo_v2\bin\yolo_cpp_dll.dll" "$(targetDir)yolo_cpp_dll.dll"
+
+copy /Y "$(SolutionDir)config\yolo.cfg" "$(targetDir)yolo.cfg"
+copy /Y "$(SolutionDir)config\data\coco.data" "$(targetDir)coco.data"
+copy /Y "$(SolutionDir)config\data\coco.names" "$(targetDir)coco.names"
+copy /Y "$(SolutionDir)config\weights\yolo.weights" "$(targetDir)yolo.weights"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

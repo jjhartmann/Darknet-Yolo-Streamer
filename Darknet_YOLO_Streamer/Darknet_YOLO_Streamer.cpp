@@ -55,17 +55,37 @@ std::vector<std::string> objects_names_from_file(std::string const filename) {
 }
 
 
-int main()
+int main(int argc, const char* argv[])
 {
-    Detector detector("yolo.cfg", "yolo.weights");
+    std::string config = "";
+    std::string weights = "";
+    std::string cocodataset = "coco.names";
+    if (argc < 3)
+    {
+        config = "yolo.cfg";
+        weights = "yolo.weights";
+        std::cout << "Not enough arguments" << std::endl;
+    }
+    else
+    {
+        cocodataset = argv[3];
+        config = argv[1];
+        weights = argv[2];
+    }
 
-    auto obj_names = objects_names_from_file("data/coco.names");
+
+    std::cout << "Before Detector" << std::endl;
+    Detector detector(config, weights);
+    std::cout << "After Detector" << std::endl;
+
+
+    auto obj_names = objects_names_from_file(cocodataset);
 
     while (true)
     {
         std::cout << "input image or video filename: ";
 
-        std::string filename = "D:\GIT_DIR\ANDROID_EVERYWHERE_PROJECTS\Darknet_YOLO_Streamer\config\data\dog.jpg";
+        std::string filename = "D:\\GIT_DIR\\ANDROID_EVERYWHERE_PROJECTS\\Darknet_YOLO_Streamer\\config\\data\\dog.jpg";
         std::cin >> filename;
         if (filename.size() == 0) break;
 
@@ -83,6 +103,7 @@ int main()
                 }
             }
             else {	// image file
+                std::cout << filename << std::endl;
                 cv::Mat mat_img = cv::imread(filename);
                 std::vector<bbox_t> result_vec = detector.detect(mat_img);
                 draw_boxes(mat_img, result_vec, obj_names);
