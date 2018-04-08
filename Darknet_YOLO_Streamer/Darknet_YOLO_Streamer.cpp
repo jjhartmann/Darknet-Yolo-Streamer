@@ -63,8 +63,9 @@ int main()
 
     while (true)
     {
-        std::string filename;
         std::cout << "input image or video filename: ";
+
+        std::string filename = "D:\GIT_DIR\ANDROID_EVERYWHERE_PROJECTS\Darknet_YOLO_Streamer\config\data\dog.jpg";
         std::cin >> filename;
         if (filename.size() == 0) break;
 

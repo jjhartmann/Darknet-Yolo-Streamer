@@ -111,6 +111,19 @@
       <AdditionalLibraryDirectories>D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\lib;..\3rdparty\yolo_v2\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>yolo_cpp_dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_core2413.dll" "$(targetDir)opencv_core2413.dll"
+copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_highgui2413.dll" "$(targetDir)opencv_highgui2413.dll"
+copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_ffmpeg2413_64.dll" "$(targetDir)opencv_ffmpeg2413_64.dll"
+copy /Y "D:\ThirdParty\OpenCV-2.4.13\opencv\build\x64\vc14\bin\opencv_imgproc2413.dll" "$(targetDir)opencv_imgproc2413.dll"
+copy /Y "$(SolutionDir)3rdparty\yolo_v2\bin\yolo_cpp_dll.dll" "$(targetDir)yolo_cpp_dll.dll"
+
+copy /Y "$(SolutionDir)config\yolo.cfg" "$(targetDir)yolo.cfg"
+copy /Y "$(SolutionDir)config\data\coco.data" "$(targetDir)coco.data"
+copy /Y "$(SolutionDir)config\data\coco.names" "$(targetDir)coco.names"
+copy /Y "$(SolutionDir)config\weights\yolo.weights" "$(targetDir)yolo.weights"
+</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
