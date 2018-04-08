@@ -174,7 +174,12 @@ copy /Y "$(SolutionDir)3rdparty\yolo_v2\bin\yolo_cpp_dll.dll" "$(targetDir)yolo_
 copy /Y "$(SolutionDir)config\yolo.cfg" "$(targetDir)yolo.cfg"
 copy /Y "$(SolutionDir)config\data\coco.data" "$(targetDir)coco.data"
 copy /Y "$(SolutionDir)config\data\coco.names" "$(targetDir)coco.names"
-copy /Y "$(SolutionDir)config\weights\yolo.weights" "$(targetDir)yolo.weights"</Command>
+copy /Y "$(SolutionDir)config\weights\yolo.weights" "$(targetDir)yolo.weights"
+
+copy /Y "$(SolutionDir)config\yolo-voc.cfg" "$(targetDir)yolo-voc.cfg"
+copy /Y "$(SolutionDir)config\data\voc.data" "$(targetDir)voc.data"
+copy /Y "$(SolutionDir)config\data\voc.names" "$(targetDir)voc.names"
+copy /Y "$(SolutionDir)config\weights\yolo-voc.weights" "$(targetDir)yolo-voc.weights"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

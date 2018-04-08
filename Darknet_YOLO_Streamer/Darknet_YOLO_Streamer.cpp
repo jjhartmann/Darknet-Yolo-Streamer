@@ -23,6 +23,15 @@
 #pragma comment(lib, "opencv_imgproc2413.lib")
 #pragma comment(lib, "opencv_highgui2413.lib")
 
+// TCPClient
+#include "TCPClient.h"
+#define UNITY_YOLO_STREAM_IP "192.168.137.1"
+#define UNITY_YOLO_STREAM_PORT "10045"
+
+// YOLO Stream to Unity
+TCPClient *UnityYoloStream;
+
+
 
 void draw_boxes(cv::Mat mat_img, std::vector<bbox_t> result_vec, std::vector<std::string> obj_names, unsigned int wait_msec = 0) {
     int iter = 0;
@@ -58,16 +67,16 @@ std::vector<std::string> objects_names_from_file(std::string const filename) {
     return file_lines;
 }
 
-
 int main(int argc, const char* argv[])
 {
     std::string config = "";
     std::string weights = "";
-    std::string cocodataset = "coco.names";
+    std::string cocodataset = "";
     if (argc < 3)
     {
-        config = "yolo.cfg";
-        weights = "yolo.weights";
+        config = "yolo-voc.cfg";
+        weights = "yolo-voc.weights";
+        cocodataset = "voc.names";
         std::cout << "Not enough arguments" << std::endl;
     }
     else
@@ -76,6 +85,9 @@ int main(int argc, const char* argv[])
         config = argv[1];
         weights = argv[2];
     }
+
+    // Init TCP Cleint
+    UnityYoloStream = new TCPClient(UNITY_YOLO_STREAM_IP, UNITY_YOLO_STREAM_PORT, "unity_yolo_stream");
 
     
     // Setup 
@@ -125,6 +137,10 @@ int main(int argc, const char* argv[])
         //catch (...) { std::cerr << "unknown exception \n"; getchar(); }
 
 
+        
+     
+
+
 
         try {
             detector.nms = 0.02;	// comment it - if track_id is not required
@@ -142,6 +158,9 @@ int main(int argc, const char* argv[])
             break;
         }
     }
+
+    // Delete content
+    delete UnityYoloStream;
 
     return 0;
 }
