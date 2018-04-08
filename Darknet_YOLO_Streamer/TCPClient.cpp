@@ -8,7 +8,7 @@
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
-
+#include "yolo_v2_class.hpp"
 
 
 #define PREVENT_CONNECTION_ERROR(name) if (!mIsConnected)                 \
@@ -29,7 +29,10 @@ TCPClient::~TCPClient() {
     }
 }
 
-
+bool TCPClient::IsConnected()
+{
+    return mIsConnected;
+}
 
 
 TCPClient::TCPClient(string host, string port, string friendlyName) :
@@ -141,7 +144,7 @@ void TCPClient::SendMat(cv::Mat in_mat)
 // Send Message
 void TCPClient::SendChar(char *msg) {
     PREVENT_CONNECTION_ERROR(mServerFriendlyName)
-        int len = (int)strlen(msg);
+    int len = (int)strlen(msg);
 
     char *dataArray = new char[len + sizeof(int)];
     memcpy(dataArray, &len, sizeof(int));
@@ -165,7 +168,7 @@ void TCPClient::SendButtonEvent(InteractionEventType eType, int b_id, int b_val,
 {
     PREVENT_CONNECTION_ERROR(mServerFriendlyName)
 
-        int misclen = strlen(b_misc.c_str());
+    int misclen = strlen(b_misc.c_str());
     int headerlen = sizeof(int) * 3;
     int totalLen = misclen + headerlen;
 
@@ -191,6 +194,25 @@ void TCPClient::SendButtonEvent(InteractionEventType eType, int b_id, int b_val,
     SendData(dataArray, totalLen + sizeof(int));
 
     delete dataArray;
+}
+
+/// Send YOLO Bounding Box to Unity Server
+/// - bbox_t: part of yolo API
+void TCPClient::SendBoundingBoxData(bbox_t bbox)
+{
+    PREVENT_CONNECTION_ERROR(mServerFriendlyName)
+
+
+    int len = (int) sizeof(bbox_t);
+    char *dataArray = new char[len + sizeof(int)];
+    memcpy(dataArray, &len, sizeof(int));
+    memcpy(dataArray + sizeof(int), &bbox, len);
+
+    SendData(dataArray, len + sizeof(int));
+
+    delete dataArray;
+
+
 }
 
 

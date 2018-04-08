@@ -147,6 +147,12 @@ int main(int argc, const char* argv[])
             std::vector<bbox_t> result_vec = detector.detect(frame, 0.2);
             result_vec = detector.tracking(result_vec);	// comment it - if track_id is not required
 
+            // Send data to Unity
+            if (UnityYoloStream->IsConnected() || true)
+            {
+                UnityYoloStream->SendBoundingBoxData(result_vec[0]);
+            }
+
             draw_boxes(frame, result_vec, obj_names, 0);
             show_result(result_vec, obj_names);
         }

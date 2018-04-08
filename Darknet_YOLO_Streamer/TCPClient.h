@@ -21,6 +21,9 @@
 #define DEFAULT_PORT "45697"
 /////////////////////////////
 
+// Forward delclaration for YOLO Bounding Box
+struct bbox_t;
+
 // Forward Declarations
 namespace cv {
     class Mat;
@@ -46,9 +49,12 @@ public:
     TCPClient(string host, string port, string friendlyName);
     ~TCPClient();
 
+    bool IsConnected();
+
     void SendChar(char *msg);
     void SendMat(cv::Mat in_mat);
     void SendButtonEvent(InteractionEventType eType, int b_id, int b_val, string b_misc);
+    void SendBoundingBoxData(bbox_t bbox);
 
 private:
     // Connection info
