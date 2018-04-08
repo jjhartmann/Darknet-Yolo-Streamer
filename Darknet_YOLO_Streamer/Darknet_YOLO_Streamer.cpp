@@ -27,7 +27,7 @@
 void draw_boxes(cv::Mat mat_img, std::vector<bbox_t> result_vec, std::vector<std::string> obj_names, unsigned int wait_msec = 0) {
     int iter = 0;
     for (auto &i : result_vec) {
-        cv::Scalar color(60 + (iter * 5), 160, 260);
+        cv::Scalar color(60 + (iter * 5), 160 + (iter * 5), 260 - (iter * 5));
         cv::rectangle(mat_img, cv::Rect(i.x, i.y, i.w, i.h), color, 3);
         if (obj_names.size() > i.obj_id)
             putText(mat_img, obj_names[i.obj_id], cv::Point2f(i.x, i.y - 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 1, color);
@@ -36,7 +36,7 @@ void draw_boxes(cv::Mat mat_img, std::vector<bbox_t> result_vec, std::vector<std
         iter++;
     }
     cv::imshow("window name", mat_img);
-    cv::waitKey(wait_msec);
+    //cv::waitKey(wait_msec);
 }
 
 
@@ -131,12 +131,16 @@ int main(int argc, const char* argv[])
             std::vector<bbox_t> result_vec = detector.detect(frame, 0.2);
             result_vec = detector.tracking(result_vec);	// comment it - if track_id is not required
 
-            draw_boxes(frame, result_vec, obj_names, 3);
+            draw_boxes(frame, result_vec, obj_names, 0);
             show_result(result_vec, obj_names);
-        
         }
         catch (std::exception &e) { std::cerr << "exception: " << e.what() << "\n"; getchar(); }
         catch (...) { std::cerr << "unknown exception \n"; getchar(); }
+    
+        if (cv::waitKey(1) == 'q')
+        {
+            break;
+        }
     }
 
     return 0;
