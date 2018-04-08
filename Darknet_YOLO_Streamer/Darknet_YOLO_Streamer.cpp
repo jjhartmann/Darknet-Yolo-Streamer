@@ -22,14 +22,18 @@
 #pragma comment(lib, "opencv_core2413.lib")
 #pragma comment(lib, "opencv_imgproc2413.lib")
 #pragma comment(lib, "opencv_highgui2413.lib")
+
+
 void draw_boxes(cv::Mat mat_img, std::vector<bbox_t> result_vec, std::vector<std::string> obj_names, unsigned int wait_msec = 0) {
+    int iter = 0;
     for (auto &i : result_vec) {
-        cv::Scalar color(60, 160, 260);
+        cv::Scalar color(60 + (iter * 5), 160, 260);
         cv::rectangle(mat_img, cv::Rect(i.x, i.y, i.w, i.h), color, 3);
         if (obj_names.size() > i.obj_id)
             putText(mat_img, obj_names[i.obj_id], cv::Point2f(i.x, i.y - 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 1, color);
         if (i.track_id > 0)
             putText(mat_img, std::to_string(i.track_id), cv::Point2f(i.x + 5, i.y + 15), cv::FONT_HERSHEY_COMPLEX_SMALL, 1, color);
+        iter++;
     }
     cv::imshow("window name", mat_img);
     cv::waitKey(wait_msec);
@@ -73,42 +77,62 @@ int main(int argc, const char* argv[])
         weights = argv[2];
     }
 
-
+    
+    // Setup 
     std::cout << "Before Detector" << std::endl;
     Detector detector(config, weights);
     std::cout << "After Detector" << std::endl;
 
-
     auto obj_names = objects_names_from_file(cocodataset);
 
-    while (true)
-    {
-        std::cout << "input image or video filename: ";
+    cv::VideoCapture cap;
+    cap.open(0);
 
-        std::string filename = "D:\\GIT_DIR\\ANDROID_EVERYWHERE_PROJECTS\\Darknet_YOLO_Streamer\\config\\data\\dog.jpg";
-        std::cin >> filename;
-        if (filename.size() == 0) break;
+    cv::Mat frame;
+
+    while (cap.isOpened() && cap.read(frame))
+    {
+        //std::cout << "input image or video filename: ";
+
+        //std::string filename = "D:\\GIT_DIR\\ANDROID_EVERYWHERE_PROJECTS\\Darknet_YOLO_Streamer\\config\\data\\dog.jpg";
+        //std::cin >> filename;
+        //if (filename.size() == 0) break;
+
+
+        //try {
+        //    std::string const file_ext = filename.substr(filename.find_last_of(".") + 1);
+        //    if (file_ext == "avi" || file_ext == "mp4" || file_ext == "mjpg" || file_ext == "mov") {	// video file
+        //        cv::Mat frame;
+        //        detector.nms = 0.02;	// comment it - if track_id is not required
+        //        for (cv::VideoCapture cap(filename); cap >> frame, cap.isOpened();) {
+        //            std::vector<bbox_t> result_vec = detector.detect(frame, 0.2);
+        //            result_vec = detector.tracking(result_vec);	// comment it - if track_id is not required
+
+        //            draw_boxes(frame, result_vec, obj_names, 3);
+        //            show_result(result_vec, obj_names);
+        //        }
+        //    }
+        //    else {	// image file
+        //        std::cout << filename << std::endl;
+        //        cv::Mat mat_img = cv::imread(filename);
+        //        std::vector<bbox_t> result_vec = detector.detect(mat_img);
+        //        draw_boxes(mat_img, result_vec, obj_names);
+        //        show_result(result_vec, obj_names);
+        //    }
+        //
+        //}
+        //catch (std::exception &e) { std::cerr << "exception: " << e.what() << "\n"; getchar(); }
+        //catch (...) { std::cerr << "unknown exception \n"; getchar(); }
+
+
 
         try {
-            std::string const file_ext = filename.substr(filename.find_last_of(".") + 1);
-            if (file_ext == "avi" || file_ext == "mp4" || file_ext == "mjpg" || file_ext == "mov") {	// video file
-                cv::Mat frame;
-                detector.nms = 0.02;	// comment it - if track_id is not required
-                for (cv::VideoCapture cap(filename); cap >> frame, cap.isOpened();) {
-                    std::vector<bbox_t> result_vec = detector.detect(frame, 0.2);
-                    result_vec = detector.tracking(result_vec);	// comment it - if track_id is not required
+            detector.nms = 0.02;	// comment it - if track_id is not required
+            std::vector<bbox_t> result_vec = detector.detect(frame, 0.2);
+            result_vec = detector.tracking(result_vec);	// comment it - if track_id is not required
 
-                    draw_boxes(frame, result_vec, obj_names, 3);
-                    show_result(result_vec, obj_names);
-                }
-            }
-            else {	// image file
-                std::cout << filename << std::endl;
-                cv::Mat mat_img = cv::imread(filename);
-                std::vector<bbox_t> result_vec = detector.detect(mat_img);
-                draw_boxes(mat_img, result_vec, obj_names);
-                show_result(result_vec, obj_names);
-            }
+            draw_boxes(frame, result_vec, obj_names, 3);
+            show_result(result_vec, obj_names);
         
         }
         catch (std::exception &e) { std::cerr << "exception: " << e.what() << "\n"; getchar(); }
