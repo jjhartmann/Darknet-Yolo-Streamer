@@ -216,6 +216,26 @@ void TCPClient::SendBoundingBoxData(bbox_t bbox)
 }
 
 
+/// Send YOLO Bounding Box to Unity Server
+/// - bbox_t: part of yolo API
+void TCPClient::SendBoundingBoxDataArray(vector<bbox_t> bbox_vec)
+{
+    PREVENT_CONNECTION_ERROR(mServerFriendlyName)
+
+
+    int len = bbox_vec.size() * sizeof(bbox_t);
+    char *dataArray = new char[len + sizeof(int)];
+    memcpy(dataArray, &len, sizeof(int));
+    memcpy(dataArray + sizeof(int), bbox_vec.data(), len);
+
+    SendData(dataArray, len + sizeof(int));
+
+    delete dataArray;
+
+
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Private helper functions

@@ -31,12 +31,26 @@
 // YOLO Stream to Unity
 TCPClient *UnityYoloStream;
 
+#ifdef _WIN32
+#include <windows.h>
 
+void sleep(unsigned milliseconds)
+{
+    Sleep(milliseconds);
+}
+#else
+#include <unistd.h>
+
+void sleep(unsigned milliseconds)
+{
+    usleep(milliseconds * 1000); // takes microseconds
+}
+#endif
 
 void draw_boxes(cv::Mat mat_img, std::vector<bbox_t> result_vec, std::vector<std::string> obj_names, unsigned int wait_msec = 0) {
     int iter = 0;
     for (auto &i : result_vec) {
-        cv::Scalar color(60 + (iter * 5), 160 + (iter * 5), 260 - (iter * 5));
+        cv::Scalar color(60 + (iter * 10), 160 + (iter * 5), 260 - (iter * 20));
         cv::rectangle(mat_img, cv::Rect(i.x, i.y, i.w, i.h), color, 3);
         if (obj_names.size() > i.obj_id)
             putText(mat_img, obj_names[i.obj_id], cv::Point2f(i.x, i.y - 10), cv::FONT_HERSHEY_COMPLEX_SMALL, 1, color);
@@ -99,6 +113,7 @@ int main(int argc, const char* argv[])
 
     cv::VideoCapture cap;
     cap.open(0);
+    //cap.set(CV_CAP_PROP_FPS, 20);
 
     cv::Mat frame;
 
@@ -143,26 +158,33 @@ int main(int argc, const char* argv[])
 
 
         try {
-            detector.nms = 0.02;	// comment it - if track_id is not required
+            detector.nms = 0.4;// 0.02;	// comment it - if track_id is not required
             std::vector<bbox_t> result_vec = detector.detect(frame, 0.2);
             result_vec = detector.tracking(result_vec);	// comment it - if track_id is not required
 
             // Send data to Unity
-            if (UnityYoloStream->IsConnected() || true)
+            if (UnityYoloStream->IsConnected())
             {
-                UnityYoloStream->SendBoundingBoxData(result_vec[0]);
+                UnityYoloStream->SendBoundingBoxDataArray(result_vec);
             }
 
             draw_boxes(frame, result_vec, obj_names, 0);
             show_result(result_vec, obj_names);
+
+            
         }
         catch (std::exception &e) { std::cerr << "exception: " << e.what() << "\n"; getchar(); }
         catch (...) { std::cerr << "unknown exception \n"; getchar(); }
     
+
         if (cv::waitKey(1) == 'q')
         {
             break;
         }
+
+        // Articifially Slow down stream
+        
+        sleep(100);
     }
 
     // Delete content

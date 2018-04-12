@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <string>
 #include <iostream>
+#include <vector>
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "45697"
@@ -55,6 +56,7 @@ public:
     void SendMat(cv::Mat in_mat);
     void SendButtonEvent(InteractionEventType eType, int b_id, int b_val, string b_misc);
     void SendBoundingBoxData(bbox_t bbox);
+    void TCPClient::SendBoundingBoxDataArray(vector<bbox_t> bbox_vec);
 
 private:
     // Connection info
